@@ -1,9 +1,16 @@
 import React from 'react';
+import ItemPelicula from './ItemPelicula';
 
-const ListaPeliculas = () => {
+const ListaPeliculas = ({peliculas}) => {
     return (
-        <div>
-            
+        <div className='row mt-4'>
+            {
+            peliculas.map((item, indice)=>(
+                <div className="col-md-4 mb-4">
+                    <ItemPelicula key={indice} peliculas={item}></ItemPelicula>
+                </div>
+            ))   
+            }            
         </div>
     );
 };
