@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, FormText } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import ListaPeliculas from "./ListaPeliculas";
 
 const Formulario = () => {
-  const [peliculas, setPeliculas] = useState([]);
-
+  const peliculasLocalstorage = JSON.parse(localStorage.getItem("listaPeliculas")) || []
+  const [peliculas, setPeliculas] = useState(peliculasLocalstorage);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(()=>{
+    localStorage.setItem("listaPeliculas", JSON.stringify(peliculas))
+  }, [peliculas])
 
   const agregarPeliculas = (data) => {
     setPeliculas([...peliculas, data]);
