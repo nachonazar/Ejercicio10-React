@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import { useForm } from "react-hook-form"
+import { Form, Button, FormText } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import ListaPeliculas from "./ListaPeliculas";
 
 const Formulario = () => {
@@ -11,7 +11,7 @@ const Formulario = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   const agregarPeliculas = (data) => {
     setPeliculas([...peliculas, data]);
@@ -29,25 +29,79 @@ const Formulario = () => {
           <Form.Control
             type="text"
             placeholder="Ingrese el nombre de la película"
+            {...register("inputNombre", {
+              required: "El nombre de la película es obligatorio",
+              minLength: {
+                value: 2,
+                message: "El nombre debe tener al menos 2 caracteres",
+              },
+              maxLength: {
+                value: 100,
+                message: "El nombre puede tener como máximo 100 caracteres",
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s:,.!?'"()\-]{2,100}$/,
+                message:
+                  "El nombre solo puede contener letras, números y algunos signos básicos",
+              },
+            })}
           />
+          {errors.inputNombre && (
+            <FormText className="text-danger mx-3">
+              {errors.inputNombre.message}
+            </FormText>
+          )}
         </Form.Group>
-        <Form.Group className="mb-3" controlId="inputDescripición">
+        <Form.Group className="mb-3" controlId="inputDescripción">
           <Form.Label className="mx-3">
             <strong>Descripción:</strong>
           </Form.Label>
-          <Form.Control as="textarea" rows={3} />
+          <Form.Control
+            as="textarea"
+            rows={3}
+            {...register("inputDescripción", {
+              required: "La descripción es obligatoria",
+              minLength: {
+                value: 10,
+                message: "Debe tener al menos 10 caracteres",
+              },
+              maxLength: {
+                value: 500,
+                message: "Máximo 500 caracteres permitidos",
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:¡!¿?'"()\-]+$/,
+                message:
+                  "Solo se permiten letras, números y signos básicos de puntuación",
+              },
+            })}
+          />
+          {errors.inputDescripción && (
+            <FormText className="text-danger mx-3">
+              {errors.inputDescripción.message}
+            </FormText>
+          )}
         </Form.Group>
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" controlId="inputGénero">
           <Form.Label className="mx-3">
             <strong>Género</strong>
           </Form.Label>
-          <Form.Select aria-label="Seleccionar género" defaultValue="">
+          <Form.Select
+            aria-label="Seleccionar género"
+            defaultValue=""
+            {...register("inputGénero", {
+              required: "Seleccionar un género es obligatorio",
+              validate: (value) =>
+                ["comedia", "drama", "infantil"].includes(value) ||
+                "El género seleccionado no es válido",
+            })}
+          >
             <option value="" disabled>
               Seleccione un género
             </option>
-            <option value="1">Comedia</option>
-            <option value="2">Drama</option>
-            <option value="3">Infantil</option>
+            <option value="comedia">Comedia</option>
+            <option value="drama">Drama</option>
+            <option value="infantil">Infantil</option>
           </Form.Select>
         </Form.Group>
         <div className="d-flex justify-content-end mt-5">
